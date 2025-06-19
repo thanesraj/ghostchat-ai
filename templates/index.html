@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GhostChat AI 👻</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('{{ url_for("static", filename="bg.jpg") }}') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+    }
+    #jumpscare {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <h1>👻 GhostChat AI</h1>
+  <form method="POST">
+    <input type="text" name="prompt" placeholder="Ask the ghost..." style="width: 60%; padding: 10px;">
+    <button type="submit">Summon</button>
+  </form>
+
+  <h3>{{ reply }}</h3>
+
+  <audio id="bg-music" autoplay loop hidden>
+    <source src="{{ url_for('static', filename='bg-music.mp3') }}" type="audio/mpeg">
+  </audio>
+
+  <audio id="ghost" hidden>
+    <source src="{{ url_for('static', filename='ghost.mp3') }}" type="audio/mpeg">
+  </audio>
+
+  <img id="jumpscare" src="{{ url_for('static', filename='scream.png') }}">
+
+  <script>
+    const bg = document.getElementById("bg-music");
+    const ghost = document.getElementById("ghost");
+    const jumpscare = document.getElementById("jumpscare");
+
+    window.onload = () => {
+      bg.volume = 0.3;
+      bg.play().catch(() => {});
+      const reply = "{{ reply|safe }}";
+      if (reply.length > 0) {
+        ghost.play().catch(() => {});
+        jumpscare.style.display = "block";
+        setTimeout(() => jumpscare.style.display = "none", 1500);
+      }
+    };
+  </script>
+</body>
+</html>
